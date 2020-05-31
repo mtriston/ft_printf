@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtriston <mtriston@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/31 13:44:48 by mtriston          #+#    #+#             */
-/*   Updated: 2020/05/31 16:04:33 by mtriston         ###   ########.fr       */
+/*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
+/*   Updated: 2020/05/31 21:23:39 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ int	num_of_arguments(const char *str)
 
 	num_of_arguments = 0;
 	s = (char *)str;
-	while (s)
+	while (s != NULL)
 		if (s = ft_strchr(s, '%'))
+		{
 			num_of_arguments++;
+			s++;
+		}
 	return (num_of_arguments);
 }
 
@@ -40,6 +43,6 @@ int	main()
 {
 	int n = 5;
 
-	ft_printf("Hello%d", n);
+	ft_printf("Hel%%%%%%%%%%%%%%%lo%d", n);
 	return 0;
 }

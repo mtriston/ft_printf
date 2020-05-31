@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/05/31 21:23:39 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/05/31 22:28:25 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int	num_of_arguments(const char *str)
+/* int	num_of_arguments(const char *str)
 {
 	int		num_of_arguments;
 	char	*s;
@@ -29,20 +29,44 @@ int	num_of_arguments(const char *str)
 		}
 	return (num_of_arguments);
 }
+*/
 
-int	ft_printf(const char *format, ...)
+static char	*print_argument(char *str, va_list ap)
 {
+	if (*str == 's')
+		ft_putstr_fd(va_arg(ap, char *), 1);
+	else if (*str == 'd')
+		ft_putnbr_fd(va_arg(ap, int), 1);
+	return (str + 1);
+}
+
+int			ft_printf(const char *format, ...)
+{
+	char	*str;
+	int		i;
 	va_list	ap;
-	int n = num_of_arguments(format);
+
+	str = (char *)format;
+	i = 0;
 	va_start(ap, format);
-	ft_putnbr_fd(n, 1);
+	while (*str != '\0')
+	{
+		if (*str == '%')
+		{
+			str = print_argument(++str, ap);
+		}
+		else
+			ft_putchar_fd(*str++, 1);
+		
+	}
 	return (0);
 }
 
-int	main()
+int		main()
 {
-	int n = 5;
-
-	ft_printf("Hel%%%%%%%%%%%%%%%lo%d", n);
+	char *name = "Alex";
+	char *name2 = "Anna";
+	int x = 2;
+	ft_printf("Hello, %s and %s. You are %d great persons", name, name2, x);
 	return 0;
 }

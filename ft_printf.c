@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/05/31 22:28:25 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/01 15:45:03 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,21 @@ static char	*print_argument(char *str, va_list ap)
 {
 	if (*str == 's')
 		ft_putstr_fd(va_arg(ap, char *), 1);
-	else if (*str == 'd')
+	else if (*str == 'd' || *str == 'i')
 		ft_putnbr_fd(va_arg(ap, int), 1);
+	else if (*str == 'c')
+		ft_putchar_fd(va_arg(ap, int), 1);
+	else if (*str == '%')
+		ft_putchar_fd('%', 1);
 	return (str + 1);
-}
+	}
 
 int			ft_printf(const char *format, ...)
 {
 	char	*str;
-	int		i;
 	va_list	ap;
 
 	str = (char *)format;
-	i = 0;
 	va_start(ap, format);
 	while (*str != '\0')
 	{
@@ -67,6 +69,6 @@ int		main()
 	char *name = "Alex";
 	char *name2 = "Anna";
 	int x = 2;
-	ft_printf("Hello, %s and %s. You are %d great persons", name, name2, x);
+	ft_printf("Hello, %s and %s. You are %d great persons%c100%%\n", name, name2, x, '!');
 	return 0;
 }

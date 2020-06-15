@@ -6,33 +6,53 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/05 23:13:44 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/15 16:05:25 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "printf.h"
+#include "ft_printf.h"
 
-void	print_string(char *flags, int width, int precision, char *str)
+static char	*apply_str_precision(int precision, char *str)
 {
-	int		str_length;
-	int		start_index;
-	char	total_string[width + 1];
+	char *new_str;
 	
-	str_length = ft_strlen(str);
-	if (precision >= 0)
-		str_length = (str_length > precision) ? precision : str_length;
-	start_index = 0;
-	if (width > str_length)
-	{	
-		if (!(ft_strchr(flags, '-')))
-			start_index = width - str_length;
-		ft_memset(total_string, ' ', width);
-		total_string[width] = '\0';
-		ft_memcpy(total_string + start_index, str, str_length);
-		ft_putstr_fd(total_string, 1);
-	}
-	else
-		ft_putstr_fd(str, 1);
-	if (*str == '\0' && ft_strchr(flags, ' '))
-		ft_putchar_fd(' ', 1);
+	if (precision < 0)
+		return (str);
+	if ((unsigned int)precision >= ft_strlen(str))
+		return (str);
+	if (ft_strncmp(str, "(null)", 6) == 0)
+		return (ft_strdup(""));
+	if (!(new_str = ft_substr(str, 0, precision)))
+		return (NULL);
+	str = new_str;
+	return (str);
+}
+
+int			print_string(char *flags, int width, int precision, char *str)
+{
+	if (str)
+		str = ft_strdup(str);
+	else if (!str)
+		str = ft_strdup("(null)");
+	if (!(str = apply_str_precision(precision, str)))
+		return (-1);
+	if (!(str = apply_flag_space(flags, str, 's')))
+		return (-1);
+	if (!(str = apply_width(flags, width, precision, 's', str)))
+		return (-1);
+	ft_putstr_fd(str, 1);
+	return (1);
+}
+
+int		print_char(char *flags, int width, int precision, int c)
+{
+	char *str;
+
+	if (!(str = (char *)malloc(2 * sizeof(char))))
+		return (-1);
+	str[0] = (unsigned char)c;
+	str[1] = '\0';
+	if (!(print_string(flags, width, precision, str)))
+		return (-1);
+	return (1);
 }

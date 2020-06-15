@@ -1,31 +1,54 @@
+COM_COLOR   = \033[0;34m
+OBJ_COLOR   = \033[0;36m
+OK_COLOR    = \033[0;32m
+ERROR_COLOR = \033[0;31m
+WARN_COLOR  = \033[0;33m
+NO_COLOR    = \033[m
+
+OK_STRING    = [OK]
+ERROR_STRING = [ERROR]
+WARN_STRING  = [WARNING]
+COM_STRING   = Compiling
+
 NAME = libftprintf.a
 
-LIB = libft.a
+HEAD = ./ft_printf.h
 
-CFLAGS = -Wall -Werror -Wextra
+LIBFT = ./libft/libft.a
 
-SRC = ft_printf.c
+LIBFT_DIR = ./libft
+
+FLAGS = -Wall -Werror -Wextra
+
+SRC = ft_printf.c    \
+	  apply_flags.c  \
+	  apply_width.c  \
+	  print_number.c \
+	  print_string.c
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(LIB) $(OBJ)
-	@ar rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
-	@echo $(NAME) has been compiled
-
-$(LIB):
-	@make -f ./libft/Makefile
-
-%.c: %.o
-	gcc $(CFLAGS) -c $<
+$(NAME): $(OBJ)
+	@make bonus -C $(LIBFT_DIR)
+	@cp $(LIBFT) $(NAME)
+	@ar rcs $(NAME) $(OBJ)
+	@echo "$(OK_COLOR) $(OK_STRING) $(OBJ_COLOR) $(NAME) $(NO_COLOR)"
+.c.o: $(HEAD)
+	@gcc $(FLAGS) -c $<
+	@echo "$(COM_COLOR) $(COM_STRING) $(OBJ_COLOR) $(@) $(NO_COLOR)"
 
 clean:
+	@make clean -C $(LIBFT_DIR)
 	@rm -f $(OBJ)
-	@echo All object files have been removed
+	
 
 fclean: clean
+	@$(MAKE) fclean -C $(LIBFT_DIR)
 	@rm -f $(NAME)
+	@echo "$(WARN_COLOR) $(NAME) has been removed $(NO_COLOR)"
 
 re: fclean all
+
+.PHONY: all clean fclean re

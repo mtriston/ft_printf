@@ -20,10 +20,11 @@ LIBFT_DIR = ./libft
 
 FLAGS = -Wall -Werror -Wextra
 
-SRC = ft_printf.c    \
-	  apply_flags.c  \
-	  apply_width.c  \
-	  print_number.c \
+SRC = ft_printf.c           \
+	  check_modifications.c \
+	  apply_flags.c         \
+	  apply_width.c         \
+	  print_number.c        \
 	  print_string.c
 
 OBJ = $(SRC:.c=.o)

@@ -6,80 +6,13 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 16:05:33 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/15 16:21:31 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*check_flags(char *str, char *flags)
-{
-	char	*all_flags;
-	int		i;
-
-	all_flags = "#0- +";
-	i = 0;
-	ft_bzero(flags, 6);
-	while (ft_strchr(all_flags, *str))
-		flags[i++] = *str++;
-	return (str);
-}
-
-static char	*check_width(char *str, int *width, va_list ap)
-{
-	*width = 0;
-	if (*str == '*')
-	{
-		*width = va_arg(ap, int);
-		return (str + 1);
-	}
-	if (!(ft_isdigit(*str)))
-	{
-		*width = -1;
-		return (str);
-	}
-	*width = ft_atoi(str);
-	while (ft_isdigit(*str))
-		str++;
-	return (str);
-}
-
-static char	*check_precision(char *str, int *precision, va_list ap)
-{
-	*precision = 0;
-	if (*str != '.')
-	{
-		*precision = -1;
-		return (str);
-	}
-	else if (*++str == '*')
-	{
-		*precision = va_arg(ap, int);
-		return (str + 1);
-	}
-	else if (ft_isdigit(*str))
-	{
-		*precision = ft_atoi(str);
-		while (ft_isdigit(*str))
-			str++;
-	}
-	return (str);
-}
-
-static char *check_length(char *str, char *length)
-{
-	char *all_mods;
-	int i;
-
-	all_mods = "lLhjzt";
-	i = 0;
-	ft_bzero(length, 3);
-	while (*str && ft_strchr(all_mods, *str) && i < 3)
-		length[i++] = *str++;
-	return (str);
-}
-
-static void	check_type(char *flags, int width, int precision, char type, va_list ap)
+static void	print_argument(char *flags, int width, int precision, char type, va_list ap)
 {
 	if (type == 's')
 		print_string(flags, width, precision, va_arg(ap, char *));
@@ -95,7 +28,7 @@ static void	check_type(char *flags, int width, int precision, char type, va_list
 		ft_putchar_fd('%', 1);
 }
 
-static char	*print_argument(char *str, va_list ap)
+static char	*handle_next_argument(char *str, va_list ap)
 {
 	char	flags[6];
 	int		width;
@@ -110,7 +43,7 @@ static char	*print_argument(char *str, va_list ap)
 	type = *str;
 	if (type == '\0')
 		return (str);
-	check_type(flags, width, precision, type, ap);
+	print_argument(flags, width, precision, type, ap);
 	return (str + 1);
 }
 
@@ -124,9 +57,7 @@ int			ft_printf(const char *format, ...)
 	while (*str != '\0')
 	{
 		if (*str == '%')
-		{
-			str = print_argument(++str, ap);
-		}
+			str = handle_next_argument(++str, ap);
 		else
 			ft_putchar_fd(*str++, 1);
 	}

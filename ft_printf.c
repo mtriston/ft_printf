@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 16:21:31 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/17 22:19:16 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,27 @@
 
 static void	print_argument(char *flags, int width, int precision, char type, va_list ap)
 {
+	float tmp;
+	
+	tmp = 1;
 	if (type == 's')
 		print_string(flags, width, precision, va_arg(ap, char *));
 	if (type == 'c' || type == 'C')
 		print_char(flags, width, precision, va_arg(ap, int));
-	else if (type == 'd' || type == 'i' || type == 'o')
+	else if (type == 'd' || type == 'i')
 		print_number(type, flags, width, precision, va_arg(ap, int));
+	else if (type == 'o')
+		print_number(type, flags, width, precision, va_arg(ap, size_t));
 	else if (type == 'x' || type == 'X' || type == 'u')
 		print_number(type, flags, width, precision, va_arg(ap, size_t));
 	else if (type == 'p')
 		print_number(type, flags, width, precision, va_arg(ap, intptr_t));
+	else if (type == 'f')
+	{
+		if (tmp)
+			tmp = va_arg(ap, double);
+				
+	}
 	else if (type == '%')
 		ft_putchar_fd('%', 1);
 }

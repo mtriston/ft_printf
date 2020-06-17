@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 16:05:41 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/17 22:55:49 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*apply_precision(int precision, char *str)
 	return (str = new_str);
 }
 
-static char	*get_base(char type)
+char	*get_base(char type)
 {
 	if (type == 'd' || type == 'i' || type == 'u')
 		return ("0123456789");
@@ -56,9 +56,12 @@ static char	*get_base(char type)
 int		print_number(char type, char *flags, int width, int precision, ptrdiff_t nbr)
 {
 	char *str;
-
+	
 	if (!(str = ft_itoa_base(nbr, get_base(type))))
 		return (-1);
+	if (nbr == 0 && type == 'p')
+		if(!(str = ft_strdup("(nil)")))
+			return (-1);
 	if (!(str = apply_precision(precision, str)))
 		return (-1);
 	if (!(str = apply_flag_sharp(flags, str, type)))

@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 16:17:29 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 16:28:08 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/17 22:34:35 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ char	*check_width(char *str, int *width, va_list ap)
 		return (str + 1);
 	}
 	if (!(ft_isdigit(*str)))
-	{
-		*width = -1;
 		return (str);
-	}
 	*width = ft_atoi(str);
+
 	while (ft_isdigit(*str))
 		str++;
 	return (str);

@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 17:24:09 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 16:05:12 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/15 21:51:03 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ char	*apply_flag_sharp(char *flags, char *str, char type)
 	int		i;
 
 	i = 0;
-	if (!ft_strchr(flags, '#') && type != 'p')
+	if ((!ft_strchr(flags, '#') && type != 'p') || \
+		(ft_atoi_base(str, get_base(type)) == 0 && type != 'o'))
+		return (str);
+	if (type == 'o' && *str == '0')
 		return (str);
 	while (str[i] && str[i] == '0')
 		if (str[++i] == '\0')

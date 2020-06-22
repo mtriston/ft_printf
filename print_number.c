@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/17 22:55:49 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/22 22:35:00 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*apply_precision(int precision, char *str)
 	int sign;
 
 	sign = 0;
+	if (!str)
+		return (NULL);
 	str_len = ft_strlen(str);
 	if (precision == 0 && *str == '0' && str_len == 1)
 		return (ft_strdup(""));
@@ -36,7 +38,8 @@ char	*apply_precision(int precision, char *str)
 	ft_memset(new_str, '0', precision);
 	*new_str = sign ? *str : *new_str;
 	ft_memcpy(new_str + (precision - str_len), sign ? str + 1 : str, str_len);
-	return (str = new_str);
+	free(str);
+	return (new_str);
 }
 
 char	*get_base(char type)
@@ -52,26 +55,31 @@ char	*get_base(char type)
 	else
 		return (NULL);
 }
+static void *free_str(char *str)
+{
+	if (str)
+		free(str);
+	return (NULL);
+}
 
-int		print_number(char type, char *flags, int width, int precision, ptrdiff_t nbr)
+char	*print_number(char type, char *flags, int width, int prec, ptrdiff_t n)
 {
 	char *str;
 	
-	if (!(str = ft_itoa_base(nbr, get_base(type))))
-		return (-1);
-	if (nbr == 0 && type == 'p')
+	if (!(str = ft_itoa_base(n, get_base(type))))
+		return (NULL);
+	if (n == 0 && type == 'p')
 		if(!(str = ft_strdup("(nil)")))
-			return (-1);
-	if (!(str = apply_precision(precision, str)))
-		return (-1);
+			return (free_str(str));
+	if (!(str = apply_precision(prec, str)))
+		return (free_str(str));
 	if (!(str = apply_flag_sharp(flags, str, type)))
-		return (-1);
-	if (!(str = apply_flag_plus(flags, str, nbr, type)))
-		return (-1);
+		return (free_str(str));
+	if (!(str = apply_flag_plus(flags, str, n, type)))
+		return (free_str(str));
 	if (!(str = apply_flag_space(flags, str, type)))
-		return (-1);
-	if (!(str = apply_width(flags, width, precision, type, str)))
-		return (-1);
-	ft_putstr_fd(str, 1);
-	return (1);
+		return (free_str(str));
+	if (!(str = apply_width(flags, width, prec, type, str)))
+		return (free_str(str));
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 15:33:42 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/17 23:11:05 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/22 23:33:40 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,11 @@ char	*apply_width(char *flags, int width, int precision, char type, char *str)
 	char	*new_str;
 	char	blank;
 	int		sign;
+	char	*tmp;
 
 	sign = 0;
+	if (!str)
+		return (NULL);
 	if (width < 0)
 		width = add_flag(flags, width);
 	if (width <= (int)ft_strlen(str))
@@ -71,9 +74,11 @@ char	*apply_width(char *flags, int width, int precision, char type, char *str)
 		sign = 1;
 	ft_memset(new_str, blank, width);
 	new_str[width] = '\0';
+	tmp = str;
 	str = move_prefix(flags, str, new_str, precision);
 	start = ft_strchr(flags, '-') ? 0 : width - ft_strlen(str) + sign;
 	ft_memcpy(new_str + start, sign ? str + 1 : str, ft_strlen(str) - sign);
 	*new_str = sign ? *str : *new_str;
-	return (str = new_str);
+	free(tmp);
+	return (new_str);
 }

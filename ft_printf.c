@@ -6,71 +6,111 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/17 22:19:16 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/22 23:20:59 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void	print_argument(char *flags, int width, int precision, char type, va_list ap)
+static char	*handle_arg(char *flags, int width, int prec, char type, va_list ap)
 {
-	float tmp;
-	
-	tmp = 1;
 	if (type == 's')
-		print_string(flags, width, precision, va_arg(ap, char *));
-	if (type == 'c' || type == 'C')
-		print_char(flags, width, precision, va_arg(ap, int));
+		return (print_string(flags, width, prec, va_arg(ap, char *)));
+	else if (type == 'c' || type == 'C')
+		return (print_char(flags, width, prec, va_arg(ap, int)));
 	else if (type == 'd' || type == 'i')
-		print_number(type, flags, width, precision, va_arg(ap, int));
+		return (print_number(type, flags, width, prec, va_arg(ap, int)));
 	else if (type == 'o')
-		print_number(type, flags, width, precision, va_arg(ap, size_t));
+		return (print_number(type, flags, width, prec, va_arg(ap, size_t)));
 	else if (type == 'x' || type == 'X' || type == 'u')
-		print_number(type, flags, width, precision, va_arg(ap, size_t));
+		return (print_number(type, flags, width, prec, va_arg(ap, size_t)));
 	else if (type == 'p')
-		print_number(type, flags, width, precision, va_arg(ap, intptr_t));
-	else if (type == 'f')
-	{
-		if (tmp)
-			tmp = va_arg(ap, double);
-				
-	}
+		return (print_number(type, flags, width, prec, va_arg(ap, intptr_t)));
 	else if (type == '%')
-		ft_putchar_fd('%', 1);
+		return (ft_strdup("%"));
+	else
+		return (NULL);
 }
 
-static char	*handle_next_argument(char *str, va_list ap)
+static char	*join_argument(char **str, char *format, va_list ap)
 {
 	char	flags[6];
 	int		width;
 	int		precision;
 	char	length[3];
 	char	type;
+	char	*arg;
+	char	*tmp;
 
-	str = check_flags(str, flags);
-	str = check_width(str, &width, ap);
-	str = check_precision(str, &precision, ap);
-	str = check_length(str, length);
-	type = *str;
+	if (!(format = check_flags(format, flags)))
+		return (NULL);
+	if(!(format = check_width(format, &width, ap)))
+		return (NULL);
+	if (!(format = check_precision(format, &precision, ap)))
+		return (NULL);
+	if (!(format = check_length(format, length)))
+		return (NULL);
+	type = *format;
 	if (type == '\0')
-		return (str);
-	print_argument(flags, width, precision, type, ap);
-	return (str + 1);
+		return (format);
+	if (!(arg = handle_arg(flags, width, precision, type, ap)))
+		return (NULL);
+	tmp = *str;
+	if (!(*str = ft_strjoin(*str, arg)))
+		return (NULL);
+	free(tmp);
+	free(arg);
+	return (format + 1);
+}
+
+static char	*join_str(char **str, char *format)
+{
+	int		i;
+	char	*tmp;
+	char	*sub_str;
+
+	i = 0;
+	while (format[i] && format[i] != '%')
+		i++;
+	tmp = *str;
+	if (!(sub_str = ft_substr(format, 0, i)))
+		return (NULL);
+	if (!(*str = ft_strjoin(*str, sub_str)))
+		return (NULL);
+	free(tmp);
+	free(sub_str);
+	return (format + i);
 }
 
 int			ft_printf(const char *format, ...)
 {
+	char	*new_str;
 	char	*str;
 	va_list	ap;
+	int		str_len;
 
+	if (!format)
+		return (-1);
+
+	if (!(new_str = ft_calloc(1, sizeof(char))))
+		return (-1);
 	str = (char *)format;
 	va_start(ap, format);
 	while (*str != '\0')
 	{
 		if (*str == '%')
-			str = handle_next_argument(++str, ap);
+		{
+			if(!(str = join_argument(&new_str, ++str, ap)))
+				return (-1);
+		}
 		else
-			ft_putchar_fd(*str++, 1);
+		{
+			if(!(str = join_str(&new_str, str)))
+				return (-1);
+		}
 	}
-	return (0);
+	ft_putstr_fd(new_str, 1);
+	str_len = ft_strlen(new_str);
+	free(new_str);
+	return (str_len);
 }

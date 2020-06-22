@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 17:24:09 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/15 21:51:03 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/22 23:25:34 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ char	*apply_flag_space(char *flags, char *str, char type)
 {
 	char *new_str;
 
+	if (!str)
+		return (NULL);
 	if (type == 's' && *str != '\0')
 		return (str);
 	if (*str == '-' || *str == '+')
@@ -24,17 +26,20 @@ char	*apply_flag_space(char *flags, char *str, char type)
 		return (str);
 	if (!(new_str = ft_strjoin(" ", str)))
 		return (NULL);
+	free(str);
 	return (new_str);
 }
 
 char	*apply_flag_plus(char *flags, char *str, int nbr, char type)
 {
 	char *new_str;
-	
+	if (!str)
+		return (NULL);
 	if (nbr < 0 || !ft_strchr(flags, '+') || (type != 'd' && type != 'i'))
 		return (str);
 	if (!(new_str = ft_strjoin("+", str)))
 		return (NULL);
+	free(str);
 	return (new_str);
 }
 
@@ -56,6 +61,8 @@ char	*apply_flag_sharp(char *flags, char *str, char type)
 	int		i;
 
 	i = 0;
+	if (!str)
+		return (NULL);
 	if ((!ft_strchr(flags, '#') && type != 'p') || \
 		(ft_atoi_base(str, get_base(type)) == 0 && type != 'o'))
 		return (str);
@@ -66,5 +73,6 @@ char	*apply_flag_sharp(char *flags, char *str, char type)
 			return (str);
 	if (!(new_str = ft_strjoin(get_prefix(type), str)))
 		return (NULL);
+	free(str);
 	return (new_str);
 }

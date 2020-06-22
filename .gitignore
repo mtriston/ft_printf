@@ -6,3 +6,4 @@ main.c
 pft/
 *.o
 *.a
+.vscode

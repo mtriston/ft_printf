@@ -6,23 +6,23 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 17:24:09 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 10:07:01 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 14:29:41 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char		*apply_flag_space(char *flags, char *str, char type)
+char		*apply_flag_space(t_mods list, char *str)
 {
 	char *new_str;
 
 	if (!str)
 		return (NULL);
-	if (type == 's' && *str != '\0')
+	if (list.type == 's' && *str != '\0')
 		return (str);
 	if (*str == '-' || *str == '+')
 		return (str);
-	if (!ft_strchr(flags, ' '))
+	if (!list.flag_space)
 		return (str);
 	if (!(new_str = ft_strjoin(" ", str)))
 		return (NULL);
@@ -30,13 +30,13 @@ char		*apply_flag_space(char *flags, char *str, char type)
 	return (new_str);
 }
 
-char		*apply_flag_plus(char *flags, char *str, int nbr, char type)
+char		*apply_flag_plus(t_mods list, char *str, int nbr)
 {
 	char *new_str;
 
 	if (!str)
 		return (NULL);
-	if (nbr < 0 || !ft_strchr(flags, '+') || (type != 'd' && type != 'i'))
+	if (nbr < 0 || !list.flag_plus|| (list.type != 'd' && list.type != 'i'))
 		return (str);
 	if (!(new_str = ft_strjoin("+", str)))
 		return (NULL);
@@ -44,35 +44,33 @@ char		*apply_flag_plus(char *flags, char *str, int nbr, char type)
 	return (new_str);
 }
 
-static char	*get_prefix(char type)
+static char	*get_prefix(t_mods list)
 {
-	if (type == 'p' || type == 'x')
+	if (list.type == 'p' || list.type == 'x')
 		return ("0x");
-	else if (type == 'X')
+	else if (list.type == 'X')
 		return ("0X");
-	else if (type == 'o')
+	else if (list.type == 'o')
 		return ("0");
 	else
 		return ("");
 }
 
-char		*apply_flag_sharp(char *flags, char *str, char type)
+char		*apply_flag_sharp(t_mods list, char *str)
 {
 	char	*new_str;
 	int		i;
 
 	i = 0;
-	if (!str)
-		return (NULL);
-	if ((!ft_strchr(flags, '#') && type != 'p') || \
-		(ft_atoi_base(str, get_base(type)) == 0 && type != 'o'))
+	if ((!list.flag_sharp && list.type != 'p') || \
+		(ft_atoi_base(str, get_base(list.type)) == 0 && list.type != 'o'))
 		return (str);
-	if (type == 'o' && *str == '0')
+	if (list.type == 'o' && *str == '0')
 		return (str);
 	while (str[i] && str[i] == '0')
 		if (str[++i] == '\0')
 			return (str);
-	if (!(new_str = ft_strjoin(get_prefix(type), str)))
+	if (!(new_str = ft_strjoin(get_prefix(list), str)))
 		return (NULL);
 	free(str);
 	return (new_str);

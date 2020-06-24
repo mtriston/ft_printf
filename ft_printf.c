@@ -6,59 +6,69 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 10:20:37 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 17:07:30 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*handle_arg(char *flags, int width, int prec, char type, va_list ap)
+static t_mods	list_init(void)
 {
-	if (type == 's')
-		return (print_string(flags, width, prec, va_arg(ap, char *)));
-	else if (type == 'c' || type == 'C')
-		return (print_char(flags, width, prec, va_arg(ap, int)));
-	else if (type == 'd' || type == 'i')
-		return (print_number(type, flags, width, prec, va_arg(ap, int)));
-	else if (type == 'o')
-		return (print_number(type, flags, width, prec, va_arg(ap, size_t)));
-	else if (type == 'x' || type == 'X' || type == 'u')
-		return (print_number(type, flags, width, prec, va_arg(ap, size_t)));
-	else if (type == 'p')
-		return (print_number(type, flags, width, prec, va_arg(ap, intptr_t)));
-	else if (type == '%')
+	t_mods list;
+
+	list.flag_sharp = 0;
+	list.flag_zero = 0;
+	list.flag_minus = 0;
+	list.flag_plus = 0;
+	list.flag_space = 0;
+	list.width = 0;
+	list.precision = 0;
+	list.type = 0;
+	return (list);
+}
+
+static char		*handle_arg(t_mods *list, va_list ap)
+{
+	if (list->type == 's')
+		return (print_string(*list, va_arg(ap, char *)));
+	else if (list->type == 'c')
+		return (print_char(list, va_arg(ap, int)));
+	else if (list->type == 'd' || list->type == 'i')
+		return (print_number(*list, va_arg(ap, int)));
+	else if (list->type == 'o')
+		return (print_number(*list, va_arg(ap, size_t)));
+	else if (list->type == 'x' || list->type == 'X' || list->type == 'u')
+		return (print_number(*list, va_arg(ap, size_t)));
+	else if (list->type == 'p')
+		return (print_number(*list, va_arg(ap, intptr_t)));
+	else if (list->type == '%')
 		return (ft_strdup("%"));
 	else
 		return (NULL);
 }
-char		*check_modification()
+
+static char		*join_argument(char **str, char *format, va_list ap)
 {
-	
-}
-static char	*join_argument(char **str, char *format, va_list ap)
-{
-	char	flags[6];
-	int		width;
-	int		precision;
-	char	length[3];
-	char	type;
 	char	*arg;
 	char	*tmp;
+	t_mods	list;
 
-	if (!(format = check_flags(format, flags)))
+	list = list_init();
+	if (!(format = check_flags(format, &list)))
 		return (NULL);
-	if (!(format = check_width(format, &width, ap)))
+	if (!(format = check_width(format, &list, ap)))
 		return (NULL);
-	if (!(format = check_precision(format, &precision, ap)))
+	if (!(format = check_precision(format, &list, ap)))
 		return (NULL);
-	if (!(format = check_length(format, length)))
+	if (is_type(*format))
+		list.type = *format;
+	else
 		return (NULL);
-	type = *format;
-	if (type == '\0')
-		return (format);
-	if (!(arg = handle_arg(flags, width, precision, type, ap)))
+	if (!(arg = handle_arg(&list, ap)))
 		return (NULL);
 	tmp = *str;
+	if (!*arg)
+		return (format + 1);
 	if (!(*str = ft_strjoin(*str, arg)))
 		return (NULL);
 	free(tmp);
@@ -66,7 +76,7 @@ static char	*join_argument(char **str, char *format, va_list ap)
 	return (format + 1);
 }
 
-static char	*join_str(char **str, char *format)
+static char		*join_str(char **str, char *format)
 {
 	int		i;
 	char	*tmp;
@@ -85,7 +95,7 @@ static char	*join_str(char **str, char *format)
 	return (format + i);
 }
 
-int			ft_printf(const char *format, ...)
+int				ft_printf(const char *format, ...)
 {
 	char	*new_str;
 	char	*str;

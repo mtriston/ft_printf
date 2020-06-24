@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 10:01:32 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 14:55:16 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ char		*apply_precision(int precision, char *str)
 	sign = 0;
 	if (!str)
 		return (NULL);
-	if (precision == 0 && *str == '0' && (str_len = ft_strlen(str)) == 1)
+	str_len = ft_strlen(str);
+	if (precision == 0 && *str == '0' && str_len == 1)
 		return (ft_strdup(""));
 	if (precision <= str_len)
 		return (str);
@@ -62,24 +63,24 @@ static void	*free_str(char *str)
 	return (NULL);
 }
 
-char		*print_number(char type, char *flags, int width, int prec, ptrdiff_t n)
+char		*print_number(t_mods list, ptrdiff_t n)
 {
 	char *str;
 
-	if (!(str = ft_itoa_base(n, get_base(type))))
+	if (!(str = ft_itoa_base(n, get_base(list.type))))
 		return (NULL);
-	if (n == 0 && type == 'p')
+	if (n == 0 && list.type == 'p')
 		if (!(str = ft_strdup("(nil)")))
 			return (free_str(str));
-	if (!(str = apply_precision(prec, str)))
+	if (!(str = apply_precision(list.precision, str)))
 		return (free_str(str));
-	if (!(str = apply_flag_sharp(flags, str, type)))
+	if (!(str = apply_flag_sharp(list, str)))
 		return (free_str(str));
-	if (!(str = apply_flag_plus(flags, str, n, type)))
+	if (!(str = apply_flag_plus(list, str, n)))
 		return (free_str(str));
-	if (!(str = apply_flag_space(flags, str, type)))
+	if (!(str = apply_flag_space(list, str)))
 		return (free_str(str));
-	if (!(str = apply_width(flags, width, prec, type, str)))
+	if (!(str = apply_width(list, str)))
 		return (free_str(str));
 	return (str);
 }

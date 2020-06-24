@@ -6,18 +6,18 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 15:33:42 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 09:56:03 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 14:21:22 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*move_prefix(char *flags, char *str, char *new_str, int precision)
+static char	*move_prefix(t_mods list, char *str, char *new_str)
 {
 	int i;
 
 	i = 0;
-	if (ft_strchr(flags, '-') || !ft_strchr(flags, '0') || precision >= 0)
+	if (list.flag_minus || !list.flag_zero || list.precision >= 0)
 		return (str);
 	if (str[i] == ' ')
 		i++;
@@ -27,31 +27,16 @@ static char	*move_prefix(char *flags, char *str, char *new_str, int precision)
 	return (str + i);
 }
 
-static char	check_blank(char *flags, int precision, char type)
+static char	check_blank(t_mods list)
 {
-	if (ft_strchr(flags, '0') && precision < 0 && type != 's' && \
-			!ft_strchr(flags, '-'))
+	if (list.flag_zero && list.precision < 0 && \
+			list.type != 's' && !list.flag_minus)
 		return ('0');
 	else
 		return (' ');
 }
 
-static int	add_flag(char *flags, int width)
-{
-	if (width < 0)
-	{
-		if (!ft_strchr(flags, '-'))
-		{
-			while (*flags)
-				flags++;
-			*flags = '-';
-		}
-		width = -width;
-	}
-	return (width);
-}
-
-char		*apply_width(char *flags, int width, int precision, char type, char *str)
+char		*apply_width(t_mods list, char *str)
 {
 	int		start;
 	char	*new_str;
@@ -60,22 +45,18 @@ char		*apply_width(char *flags, int width, int precision, char type, char *str)
 	char	*tmp;
 
 	sign = 0;
-	if (!str)
-		return (NULL);
-	if (width < 0)
-		width = add_flag(flags, width);
-	if (width <= (int)ft_strlen(str))
+	if (list.width <= (int)ft_strlen(str))
 		return (str);
-	if (!(new_str = (char *)malloc((width + 1) * sizeof(char))))
+	if (!(new_str = (char *)malloc((list.width + 1) * sizeof(char))))
 		return (NULL);
-	blank = check_blank(flags, precision, type);
+	blank = check_blank(list);
 	if (blank == '0' && (*str == '-' || *str == '+'))
 		sign = 1;
-	ft_memset(new_str, blank, width);
-	new_str[width] = '\0';
+	ft_memset(new_str, blank, list.width);
+	new_str[list.width] = '\0';
 	tmp = str;
-	str = move_prefix(flags, str, new_str, precision);
-	start = ft_strchr(flags, '-') ? 0 : width - ft_strlen(str) + sign;
+	str = move_prefix(list, str, new_str);
+	start = list.flag_minus ? 0 : list.width - ft_strlen(str) + sign;
 	ft_memcpy(new_str + start, sign ? str + 1 : str, ft_strlen(str) - sign);
 	*new_str = sign ? *str : *new_str;
 	free(tmp);

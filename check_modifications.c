@@ -6,72 +6,80 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 16:17:29 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 10:06:44 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 14:53:36 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*check_flags(char *str, char *flags)
+char	*check_flags(char *format, t_mods *list)
 {
-	char	*all_flags;
-	int		i;
-
-	all_flags = "#0- +";
-	i = 0;
-	ft_bzero(flags, 6);
-	while (ft_strchr(all_flags, *str))
-		flags[i++] = *str++;
-	return (str);
+	while (is_flag(*format) && *format)
+	{
+		if (*format == '#')
+			list->flag_sharp = 1;
+		else if (*format == '0')
+			list->flag_zero = 1;
+		else if (*format == '-')
+			list->flag_minus = 1;
+		else if (*format == '+')
+			list->flag_plus = 1;
+		else if (*format == ' ')
+			list->flag_space = 1;
+		format++;
+	}
+	if (list->flag_plus == 1)
+		list->flag_space = 0;
+	return (format);
 }
 
-char	*check_width(char *str, int *width, va_list ap)
+char	*check_width(char *format, t_mods *list, va_list ap)
 {
-	*width = 0;
-	if (*str == '*')
+	if (*format == '*')
+		list->width = va_arg(ap, int);
+	else
+		list->width = ft_atoi(format);
+	while (ft_isdigit(*format) || *format == '*')
+		format++;
+	if (list->width < 0)
 	{
-		*width = va_arg(ap, int);
-		return (str + 1);
+		list->flag_minus = 1;
+		list->width *= -1;
 	}
-	if (!(ft_isdigit(*str)))
-		return (str);
-	*width = ft_atoi(str);
-	while (ft_isdigit(*str))
-		str++;
-	return (str);
+	return (format);
 }
 
-char	*check_precision(char *str, int *precision, va_list ap)
+char	*check_precision(char *format, t_mods *list, va_list ap)
 {
-	*precision = 0;
-	if (*str != '.')
+	if (*format != '.')
 	{
-		*precision = -1;
-		return (str);
+		list->precision = -1;
+		return (format);
 	}
-	else if (*++str == '*')
+	if (*++format == '*')
 	{
-		*precision = va_arg(ap, int);
-		return (str + 1);
+		list->precision = va_arg(ap, int);
+		return (format + 1);
 	}
-	else if (ft_isdigit(*str))
-	{
-		*precision = ft_atoi(str);
-		while (ft_isdigit(*str))
-			str++;
-	}
-	return (str);
+	list->precision = ft_atoi(format);
+	while (ft_isdigit(*format))
+		format++;
+	return (format);
 }
 
-char	*check_length(char *str, char *length)
+int		is_type(int c)
 {
-	char	*all_mods;
-	int		i;
+	if (c == 'd' || c == 'i' || c == 'o' || c == 'x' || c == 's' || \
+	c == 'c' || c == 'X' || c == 'u' || c == 'p' || c == '%')
+		return (1);
+	else
+		return (0);
+}
 
-	all_mods = "lLhjzt";
-	i = 0;
-	ft_bzero(length, 3);
-	while (*str && ft_strchr(all_mods, *str) && i < 3)
-		length[i++] = *str++;
-	return (str);
+int		is_flag(int c)
+{
+	if (c == '#' || c == '0' || c == '-' || c == '+' || c == ' ')
+		return (1);
+	else
+		return (0);
 }

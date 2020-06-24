@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 09:52:59 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 14:35:49 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static char	*apply_str_precision(int precision, char *str)
 {
 	char *new_str;
-
 	if (!str)
 		return (NULL);
 	if (precision < 0)
@@ -30,26 +29,27 @@ static char	*apply_str_precision(int precision, char *str)
 	return (new_str);
 }
 
-char		*print_string(char *flags, int width, int precision, char *str)
+char		*print_string(t_mods list, char *str)
 {
 	if (str)
 		str = ft_strdup(str);
 	else if (!str)
 		str = ft_strdup("(null)");
-	if (!(str = apply_str_precision(precision, str)))
+	if (!(str = apply_str_precision(list.precision, str)))
 		return (NULL);
-	if (!(str = apply_flag_space(flags, str, 's')))
+	if (!(str = apply_flag_space(list, str)))
 		return (NULL);
-	if (!(str = apply_width(flags, width, precision, 's', str)))
+	if (!(str = apply_width(list, str)))
 		return (NULL);
 	return (str);
 }
 
-char		*print_char(char *flags, int width, int precision, int c)
+char		*print_char(t_mods *list, int c)
 {
 	char str[2];
 
-	str[0] = (unsigned char)c;
+	str[0] = c;
 	str[1] = '\0';
-	return (print_string(flags, width, precision, str));
+	list->type = 's';
+	return (print_string(*list, str));
 }

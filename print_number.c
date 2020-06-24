@@ -6,23 +6,22 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/22 22:35:00 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 10:01:32 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*apply_precision(int precision, char *str)
+char		*apply_precision(int precision, char *str)
 {
 	int		str_len;
 	char	*new_str;
-	int sign;
+	int		sign;
 
 	sign = 0;
 	if (!str)
 		return (NULL);
-	str_len = ft_strlen(str);
-	if (precision == 0 && *str == '0' && str_len == 1)
+	if (precision == 0 && *str == '0' && (str_len = ft_strlen(str)) == 1)
 		return (ft_strdup(""));
 	if (precision <= str_len)
 		return (str);
@@ -42,7 +41,7 @@ char	*apply_precision(int precision, char *str)
 	return (new_str);
 }
 
-char	*get_base(char type)
+char		*get_base(char type)
 {
 	if (type == 'd' || type == 'i' || type == 'u')
 		return ("0123456789");
@@ -55,21 +54,22 @@ char	*get_base(char type)
 	else
 		return (NULL);
 }
-static void *free_str(char *str)
+
+static void	*free_str(char *str)
 {
 	if (str)
 		free(str);
 	return (NULL);
 }
 
-char	*print_number(char type, char *flags, int width, int prec, ptrdiff_t n)
+char		*print_number(char type, char *flags, int width, int prec, ptrdiff_t n)
 {
 	char *str;
-	
+
 	if (!(str = ft_itoa_base(n, get_base(type))))
 		return (NULL);
 	if (n == 0 && type == 'p')
-		if(!(str = ft_strdup("(nil)")))
+		if (!(str = ft_strdup("(nil)")))
 			return (free_str(str));
 	if (!(str = apply_precision(prec, str)))
 		return (free_str(str));

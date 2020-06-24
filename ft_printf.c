@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/22 23:20:59 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 10:20:37 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ static char	*handle_arg(char *flags, int width, int prec, char type, va_list ap)
 	else
 		return (NULL);
 }
-
+char		*check_modification()
+{
+	
+}
 static char	*join_argument(char **str, char *format, va_list ap)
 {
 	char	flags[6];
@@ -44,7 +47,7 @@ static char	*join_argument(char **str, char *format, va_list ap)
 
 	if (!(format = check_flags(format, flags)))
 		return (NULL);
-	if(!(format = check_width(format, &width, ap)))
+	if (!(format = check_width(format, &width, ap)))
 		return (NULL);
 	if (!(format = check_precision(format, &precision, ap)))
 		return (NULL);
@@ -91,7 +94,6 @@ int			ft_printf(const char *format, ...)
 
 	if (!format)
 		return (-1);
-
 	if (!(new_str = ft_calloc(1, sizeof(char))))
 		return (-1);
 	str = (char *)format;
@@ -100,12 +102,12 @@ int			ft_printf(const char *format, ...)
 	{
 		if (*str == '%')
 		{
-			if(!(str = join_argument(&new_str, ++str, ap)))
+			if (!(str = join_argument(&new_str, ++str, ap)))
 				return (-1);
 		}
 		else
 		{
-			if(!(str = join_str(&new_str, str)))
+			if (!(str = join_str(&new_str, str)))
 				return (-1);
 		}
 	}

@@ -20,6 +20,8 @@ LIBFT_DIR = ./libft
 
 FLAGS = -Wall -Werror -Wextra
 
+CC = clang
+
 SRC = ft_printf.c           \
 	  check_modifications.c \
 	  apply_flags.c         \
@@ -37,7 +39,7 @@ $(NAME): $(OBJ)
 	@ar rcs $(NAME) $(OBJ)
 	@echo "$(OK_COLOR) $(OK_STRING) $(OBJ_COLOR) $(NAME) $(NO_COLOR)"
 .c.o: $(HEAD)
-	@gcc $(FLAGS) -c $<
+	@$(CC) $(FLAGS) -c $<
 	@echo "$(COM_COLOR) $(COM_STRING) $(OBJ_COLOR) $(@) $(NO_COLOR)"
 
 clean:

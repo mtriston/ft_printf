@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/22 22:42:16 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 09:52:59 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static char	*apply_str_precision(int precision, char *str)
 {
 	char *new_str;
+
 	if (!str)
 		return (NULL);
 	if (precision < 0)

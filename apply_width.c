@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 15:33:42 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/22 23:33:40 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 09:56:03 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static char	*move_prefix(char *flags, char *str, char *new_str, int precision)
 		i++;
 	if (str[i] == '0' && (str[i + 1] == 'x' || str[i + 1] == 'X'))
 		i += 2;
-
 	ft_memcpy(new_str, str, i);
 	return (str + i);
 }
@@ -52,7 +51,7 @@ static int	add_flag(char *flags, int width)
 	return (width);
 }
 
-char	*apply_width(char *flags, int width, int precision, char type, char *str)
+char		*apply_width(char *flags, int width, int precision, char type, char *str)
 {
 	int		start;
 	char	*new_str;

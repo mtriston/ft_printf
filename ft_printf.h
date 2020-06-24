@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 19:06:45 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/18 20:53:27 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 10:06:00 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*apply_flag_sharp(char *flags, char *str, char type);
 char	*apply_flag_space(char *flags, char *str, char type);
 char	*print_string(char *flags, int width, int precision, char *str);
 char	*print_number(char type, char *flags, int width, int precision, ptrdiff_t nbr);
-char    *print_char(char *flags, int width, int precision, int c);
+char	*print_char(char *flags, int width, int precision, int c);
 int		ft_printf(const char *, ...);
 
 #endif

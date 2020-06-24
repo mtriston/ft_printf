@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 16:17:29 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/17 22:34:35 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 10:06:44 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char	*check_width(char *str, int *width, va_list ap)
 	if (!(ft_isdigit(*str)))
 		return (str);
 	*width = ft_atoi(str);
-
 	while (ft_isdigit(*str))
 		str++;
 	return (str);
@@ -64,10 +63,10 @@ char	*check_precision(char *str, int *precision, va_list ap)
 	return (str);
 }
 
-char *check_length(char *str, char *length)
+char	*check_length(char *str, char *length)
 {
-	char *all_mods;
-	int i;
+	char	*all_mods;
+	int		i;
 
 	all_mods = "lLhjzt";
 	i = 0;

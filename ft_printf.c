@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:58:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 17:07:30 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 17:18:38 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,11 @@ int				ft_printf(const char *format, ...)
 	while (*str != '\0')
 	{
 		if (*str == '%')
-		{
-			if (!(str = join_argument(&new_str, ++str, ap)))
-				return (-1);
-		}
+			str = join_argument(&new_str, ++str, ap);
 		else
-		{
-			if (!(str = join_str(&new_str, str)))
-				return (-1);
-		}
+			str = join_str(&new_str, str);
+		if (!str)
+			return (-1);
 	}
 	ft_putstr_fd(new_str, 1);
 	str_len = ft_strlen(new_str);

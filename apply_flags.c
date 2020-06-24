@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 17:24:09 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 14:29:41 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 17:13:14 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char		*apply_flag_plus(t_mods list, char *str, int nbr)
 
 	if (!str)
 		return (NULL);
-	if (nbr < 0 || !list.flag_plus|| (list.type != 'd' && list.type != 'i'))
+	if (nbr < 0 || !list.flag_plus || (list.type != 'd' && list.type != 'i'))
 		return (str);
 	if (!(new_str = ft_strjoin("+", str)))
 		return (NULL);

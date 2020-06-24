@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 14:55:16 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 17:13:48 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ char		*apply_precision(int precision, char *str)
 	int		sign;
 
 	sign = 0;
-	if (!str)
-		return (NULL);
 	str_len = ft_strlen(str);
 	if (precision == 0 && *str == '0' && str_len == 1)
 		return (ft_strdup(""));

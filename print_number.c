@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 17:13:48 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 20:18:48 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,13 @@ char		*get_base(char type)
 		return (NULL);
 }
 
-static void	*free_str(char *str)
+int			print_number(t_mods list, ptrdiff_t n)
 {
-	if (str)
-		free(str);
-	return (NULL);
-}
-
-char		*print_number(t_mods list, ptrdiff_t n)
-{
-	char *str;
+	char	*str;
+	int		str_len;
 
 	if (!(str = ft_itoa_base(n, get_base(list.type))))
-		return (NULL);
+		return (-1);
 	if (n == 0 && list.type == 'p')
 		if (!(str = ft_strdup("(nil)")))
 			return (free_str(str));
@@ -80,5 +74,8 @@ char		*print_number(t_mods list, ptrdiff_t n)
 		return (free_str(str));
 	if (!(str = apply_width(list, str)))
 		return (free_str(str));
-	return (str);
+	str_len = ft_strlen(str);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (str_len);
 }

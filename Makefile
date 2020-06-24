@@ -27,7 +27,8 @@ SRC = ft_printf.c           \
 	  apply_flags.c         \
 	  apply_width.c         \
 	  print_number.c        \
-	  print_string.c
+	  print_string.c        \
+	  ft_printf_utils.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -54,4 +55,6 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus: all
+
+.PHONY: all clean fclean re bonus

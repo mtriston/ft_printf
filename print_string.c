@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 17:12:24 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/24 20:15:16 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,42 @@ static char	*apply_str_precision(int precision, char *str)
 	return (new_str);
 }
 
-char		*print_string(t_mods list, char *str)
+int			print_string(t_mods list, char *str)
 {
+	int str_len;
+
 	if (str)
 		str = ft_strdup(str);
 	else if (!str)
 		str = ft_strdup("(null)");
 	if (!(str = apply_str_precision(list.precision, str)))
-		return (NULL);
+		return (free_str(str));
 	if (!(str = apply_flag_space(list, str)))
-		return (NULL);
+		return (free_str(str));
 	if (!(str = apply_width(list, str)))
-		return (NULL);
-	return (str);
+		return (free_str(str));
+	str_len = ft_strlen(str);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (str_len);
 }
 
-char		*print_char(t_mods *list, int c)
+int			print_char(t_mods *list, int c)
 {
-	char str[2];
+	int width;
 
-	str[0] = c;
-	str[1] = '\0';
-	list->type = 's';
-	return (print_string(*list, str));
+	width = list->width;
+	if (list->flag_minus)
+	{
+		ft_putchar(c);
+		while (width-- > 1)
+			ft_putchar(' ');
+	}
+	else
+	{
+		while (width-- > 1)
+			ft_putchar(' ');
+		ft_putchar(c);
+	}
+	return (list->width > 0 ? list->width : 1);
 }

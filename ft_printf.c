@@ -27,7 +27,7 @@ static t_mods	list_init(void)
 	return (list);
 }
 
-static char		*handle_arg(t_mods *list, va_list ap)
+static int		print_arg(t_mods *list, va_list ap)
 {
 	if (list->type == 's')
 		return (print_string(*list, va_arg(ap, char *)));
@@ -42,83 +42,35 @@ static char		*handle_arg(t_mods *list, va_list ap)
 	else if (list->type == 'p')
 		return (print_number(*list, va_arg(ap, intptr_t)));
 	else if (list->type == '%')
-		return (ft_strdup("%"));
+		return (ft_putchar('%'));
 	else
-		return (NULL);
-}
-
-static char		*join_argument(char **str, char *format, va_list ap)
-{
-	char	*arg;
-	char	*tmp;
-	t_mods	list;
-
-	list = list_init();
-	if (!(format = check_flags(format, &list)))
-		return (NULL);
-	if (!(format = check_width(format, &list, ap)))
-		return (NULL);
-	if (!(format = check_precision(format, &list, ap)))
-		return (NULL);
-	if (is_type(*format))
-		list.type = *format;
-	else
-		return (NULL);
-	if (!(arg = handle_arg(&list, ap)))
-		return (NULL);
-	tmp = *str;
-	if (!*arg)
-		return (format + 1);
-	if (!(*str = ft_strjoin(*str, arg)))
-		return (NULL);
-	free(tmp);
-	free(arg);
-	return (format + 1);
-}
-
-static char		*join_str(char **str, char *format)
-{
-	int		i;
-	char	*tmp;
-	char	*sub_str;
-
-	i = 0;
-	while (format[i] && format[i] != '%')
-		i++;
-	tmp = *str;
-	if (!(sub_str = ft_substr(format, 0, i)))
-		return (NULL);
-	if (!(*str = ft_strjoin(*str, sub_str)))
-		return (NULL);
-	free(tmp);
-	free(sub_str);
-	return (format + i);
+		return (-1);
 }
 
 int				ft_printf(const char *format, ...)
 {
-	char	*new_str;
-	char	*str;
 	va_list	ap;
-	int		str_len;
+	int		i;
+	int		count;
+	int		tmp;
+	t_mods	list;
 
+	i = 0;
+	count = 0;
 	if (!format)
 		return (-1);
-	if (!(new_str = ft_calloc(1, sizeof(char))))
-		return (-1);
-	str = (char *)format;
 	va_start(ap, format);
-	while (*str != '\0')
+	while (format[i])
 	{
-		if (*str == '%')
-			str = join_argument(&new_str, ++str, ap);
+		if (format[i] == '%')
+		{
+			list = list_init();
+			i = check_modifications(format, ++i, &list, ap);
+			if ((tmp = print_arg(&list, ap)) < 0 && (count += tmp))
+				return (-1);
+		}
 		else
-			str = join_str(&new_str, str);
-		if (!str)
-			return (-1);
+			count += ft_putchar(format[i++]);
 	}
-	ft_putstr_fd(new_str, 1);
-	str_len = ft_strlen(new_str);
-	free(new_str);
-	return (str_len);
+	return (count);
 }

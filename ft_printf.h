@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 19:06:45 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 17:10:15 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/26 23:32:24 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct	s_mods
 	int			flag_space;
 	int			width;
 	int			precision;
-	int			length;
 	int			type;
 }				t_mods;
 

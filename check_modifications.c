@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 16:17:29 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 20:17:50 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/27 00:21:42 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static int	check_flags(const char *format, int i, t_mods *list)
 	}
 	if (list->flag_plus == 1)
 		list->flag_space = 0;
+	if (list->flag_minus == 1)
+		list->flag_zero = 0;
 	return (i);
 }
 
@@ -44,6 +46,7 @@ static int	check_width(const char *format, int i, t_mods *list, va_list ap)
 	if (list->width < 0)
 	{
 		list->flag_minus = 1;
+		list->flag_zero = 0;
 		list->width *= -1;
 	}
 	return (i);

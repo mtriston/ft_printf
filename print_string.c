@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 20:15:16 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/27 00:26:06 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ static char	*apply_str_precision(int precision, char *str)
 {
 	char *new_str;
 
-	if (!str)
-		return (NULL);
 	if (precision < 0)
 		return (str);
 	if ((unsigned int)precision >= ft_strlen(str))
@@ -35,9 +33,15 @@ int			print_string(t_mods list, char *str)
 	int str_len;
 
 	if (str)
-		str = ft_strdup(str);
+	{
+		if (!(str = ft_strdup(str)))
+			return (-1);
+	}
 	else if (!str)
-		str = ft_strdup("(null)");
+	{
+		if (!(str = ft_strdup("(null)")))
+			return (-1);
+	}
 	if (!(str = apply_str_precision(list.precision, str)))
 		return (free_str(str));
 	if (!(str = apply_flag_space(list, str)))

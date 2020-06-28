@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 23:24:58 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 20:18:48 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/27 00:22:16 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,25 @@
 
 char		*apply_precision(int precision, char *str)
 {
-	int		str_len;
+	int		s_len;
 	char	*new_str;
 	int		sign;
 
 	sign = 0;
-	str_len = ft_strlen(str);
-	if (precision == 0 && *str == '0' && str_len == 1)
-		return (ft_strdup(""));
-	if (precision <= str_len)
+	s_len = ft_strlen(str);
+	if (precision == 0 && ft_atoi(str) == 0)
+		return (ft_memset(str, '\0', s_len));
+	if (precision <= s_len)
 		return (str);
 	if (*str == '+' || *str == '-')
-	{
-		precision++;
-		str_len--;
 		sign = 1;
-	}
-	if (!(new_str = (char *)malloc((precision + 1) * sizeof(char))))
+	if (!(new_str = (char *)malloc((precision + sign + 1) * sizeof(char))))
 		return (NULL);
-	new_str[precision] = '\0';
-	ft_memset(new_str, '0', precision);
+	new_str[precision + sign] = '\0';
+	ft_memset(new_str, '0', precision + sign);
 	*new_str = sign ? *str : *new_str;
-	ft_memcpy(new_str + (precision - str_len), sign ? str + 1 : str, str_len);
+	ft_memcpy(new_str + (precision - s_len + 2 * sign), \
+			sign ? str + 1 : str, s_len - sign);
 	free(str);
 	return (new_str);
 }
@@ -61,9 +58,6 @@ int			print_number(t_mods list, ptrdiff_t n)
 
 	if (!(str = ft_itoa_base(n, get_base(list.type))))
 		return (-1);
-	if (n == 0 && list.type == 'p')
-		if (!(str = ft_strdup("(nil)")))
-			return (free_str(str));
 	if (!(str = apply_precision(list.precision, str)))
 		return (free_str(str));
 	if (!(str = apply_flag_sharp(list, str)))

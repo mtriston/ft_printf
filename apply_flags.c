@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/06 17:24:09 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/24 17:13:14 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/28 14:03:54 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,16 @@ char		*apply_flag_sharp(t_mods list, char *str)
 	int		i;
 
 	i = 0;
-	if ((!list.flag_sharp && list.type != 'p') || \
-		(ft_atoi_base(str, get_base(list.type)) == 0 && list.type != 'o'))
+	if (!list.flag_sharp && list.type != 'p')
 		return (str);
 	if (list.type == 'o' && *str == '0')
 		return (str);
-	while (str[i] && str[i] == '0')
-		if (str[++i] == '\0')
-			return (str);
+	if (list.type != 'p')
+	{
+		while (str[i] && str[i] == '0')
+			if (str[++i] == '\0')
+				return (str);
+	}
 	if (!(new_str = ft_strjoin(get_prefix(list), str)))
 		return (NULL);
 	free(str);

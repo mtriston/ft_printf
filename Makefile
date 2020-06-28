@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mtriston <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/06/24 20:27:38 by mtriston          #+#    #+#              #
+#    Updated: 2020/06/28 13:42:36 by mtriston         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 COM_COLOR   = \033[0;34m
 OBJ_COLOR   = \033[0;36m
 OK_COLOR    = \033[0;32m
@@ -39,6 +51,7 @@ $(NAME): $(OBJ)
 	@cp $(LIBFT) $(NAME)
 	@ar rcs $(NAME) $(OBJ)
 	@echo "$(OK_COLOR) $(OK_STRING) $(OBJ_COLOR) $(NAME) $(NO_COLOR)"
+
 .c.o: $(HEAD)
 	@$(CC) $(FLAGS) -c $<
 	@echo "$(COM_COLOR) $(COM_STRING) $(OBJ_COLOR) $(@) $(NO_COLOR)"

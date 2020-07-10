@@ -6,7 +6,7 @@
 /*   By: mtriston <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/05 18:13:13 by mtriston          #+#    #+#             */
-/*   Updated: 2020/06/27 00:26:06 by mtriston         ###   ########.fr       */
+/*   Updated: 2020/06/28 14:44:31 by mtriston         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ static char	*apply_str_precision(int precision, char *str)
 		return (str);
 	if ((unsigned int)precision >= ft_strlen(str))
 		return (str);
-	if (ft_strncmp(str, "(null)", 6) == 0)
-		return (ft_strdup(""));
 	if (!(new_str = ft_substr(str, 0, precision)))
 		return (NULL);
 	free(str);
